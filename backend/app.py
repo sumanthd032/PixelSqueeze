@@ -24,6 +24,10 @@ def index():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/how-it-works')
+def how_it_works():
+    return render_template('how_it_works.html')
+
 @app.route('/compress', methods=['POST'])
 def compress():
     if 'image' not in request.files:

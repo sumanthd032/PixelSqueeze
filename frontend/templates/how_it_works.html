@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works? - PixelSqueeze</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">PixelSqueeze</div>
+        <ul class="navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/how-it-works">How It Works?</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>How It Works?</h1>
+        <section class="content-section">
+            <h2>What is a Digital Image?</h2>
+            <p>A digital image is a representation of a visual scene using a grid of pixels. Each pixel is a tiny square that holds color information, typically defined by red, green, and blue (RGB) values. For example, a 1920x1080 image contains 2,073,600 pixels, and each pixel’s RGB values (0-255) determine its color, resulting in a large amount of data.</p>
+        </section>
+        <section class="content-section">
+            <h2>Why Compress Images?</h2>
+            <p>Storing and transmitting large image files can be inefficient, especially for web use or limited storage devices. Image compression reduces file size by removing redundant or less important data, balancing quality and storage needs.</p>
+        </section>
+        <section class="content-section">
+            <h2>How Does SVD Work?</h2>
+            <p>Singular Value Decomposition (SVD) is a mathematical technique from linear algebra that breaks down a matrix into three components: U, S, and V. For images, each color channel (R, G, B) is treated as a matrix. SVD decomposes it as:</p>
+            <ul>
+                <li><strong>U</strong>: Left singular vectors (spatial patterns).</li>
+                <li><strong>S</strong>: Singular values (importance of each pattern, sorted in descending order).</li>
+                <li><strong>V</strong>: Right singular vectors (temporal or feature patterns).</li>
+            </ul>
+            <p>By keeping only the top <em>k</em> singular values and their corresponding vectors, we approximate the original matrix, reducing data while preserving key features. The <em>k</em> value you select determines the trade-off between compression ratio and image quality.</p>
+            <p>The compressed image is reconstructed using: <em>Compressed = U[:, :k] @ diag(S[:k]) @ V[:k, :]</em>, where only the most significant information is retained.</p>
+        </section>
+        <section class="content-section">
+            <h2>PixelSqueeze Process</h2>
+            <p>PixelSqueeze applies SVD to each RGB channel of your uploaded image. You choose the <em>k</em> value, and the app:
+                <ol>
+                    <li>Decomposes the image into U, S, and V matrices.</li>
+                    <li>Keeps the top <em>k</em> singular values for compression.</li>
+                    <li>Reconstructs the image, calculating metrics like compression ratio and PSNR (Peak Signal-to-Noise Ratio) to measure quality loss.</li>
+                </ol>
+            </p>
+        </section>
+    </div>
+</body>
+</html>
