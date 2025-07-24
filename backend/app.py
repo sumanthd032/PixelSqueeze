@@ -45,28 +45,34 @@ def compress():
         except Exception as e:
             return render_template('index.html', results=None, error=f"Error loading image: {str(e)}")
         
-        # Define k values for compression
-        k_values = [10, 50, 100]
+        # Get user-selected k value or default to 50 if not provided
+        k_value = request.form.get('k_value', '50')
+        try:
+            k_value = int(k_value)
+            if k_value <= 0:
+                raise ValueError
+        except ValueError:
+            return render_template('index.html', results=None, error="Invalid k value. Please enter a positive integer.")
+        
         results = []
         
-        # Compress for each k
-        for k in k_values:
-            compressed_image, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k)
-            compressed_filename = f"compressed_k{k}_{filename}"
-            compressed_path = os.path.join(app.config['UPLOAD_FOLDER'], compressed_filename)
-            from PIL import Image
-            Image.fromarray(compressed_image).save(compressed_path)
-            
-            # Calculate metrics
-            compression_ratio = calculate_compression_ratio(img_array.shape, k, *r_svd, *g_svd, *b_svd)
-            psnr = calculate_psnr(img_array, compressed_image)
-            
-            results.append({
-                'k': k,
-                'compressed_path': f"/uploads/{compressed_filename}",
-                'compression_ratio': f"{compression_ratio:.2f}",
-                'psnr': f"{psnr:.2f}"
-            })
+        # Compress with the selected k value
+        compressed_image, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k_value)
+        compressed_filename = f"compressed_k{k_value}_{filename}"
+        compressed_path = os.path.join(app.config['UPLOAD_FOLDER'], compressed_filename)
+        from PIL import Image
+        Image.fromarray(compressed_image).save(compressed_path)
+        
+        # Calculate metrics
+        compression_ratio = calculate_compression_ratio(img_array.shape, k_value, *r_svd, *g_svd, *b_svd)
+        psnr = calculate_psnr(img_array, compressed_image)
+        
+        results.append({
+            'k': k_value,
+            'compressed_path': f"/uploads/{compressed_filename}",
+            'compression_ratio': f"{compression_ratio:.2f}",
+            'psnr': f"{psnr:.2f}"
+        })
         
         return render_template('index.html', results=results, original_path=f"/uploads/{filename}")
     

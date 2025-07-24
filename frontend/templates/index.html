@@ -12,6 +12,13 @@
         <form action="/compress" method="post" enctype="multipart/form-data">
             <label for="image">Upload an RGB Image:</label>
             <input type="file" id="image" name="image" accept="image/jpeg,image/png">
+            <label for="k_value">Select Quality (k value):</label>
+            <select id="k_value" name="k_value">
+                <option value="10">Low (k=10)</option>
+                <option value="50" selected>Medium (k=50)</option>
+                <option value="100">High (k=100)</option>
+                <option value="200">Very High (k=200)</option>
+            </select>
             <button type="submit">Compress</button>
         </form>
 
@@ -32,6 +39,7 @@
                         <img src="{{ result.compressed_path }}" alt="Compressed k={{ result.k }}">
                         <p>Compression Ratio: {{ result.compression_ratio }}</p>
                         <p>PSNR: {{ result.psnr }} dB</p>
+                        <a href="{{ result.compressed_path }}" download>Download Compressed Image</a>
                     </div>
                 {% endfor %}
             </div>

@@ -32,8 +32,11 @@ label {
     margin-right: 10px;
 }
 
-input[type="file"] {
+input[type="file"], select {
     margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 button {
@@ -83,4 +86,18 @@ button:hover {
 .image-item p {
     margin: 5px 0;
     color: #7f8c8d;
+}
+
+.image-item a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #2ecc71;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.image-item a:hover {
+    background-color: #27ae60;
 }
