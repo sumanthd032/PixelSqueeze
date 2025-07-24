@@ -1,18 +1,86 @@
-/* Basic styling to ensure layout works */
+/* Enhanced styling for better user experience */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+input[type="file"] {
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.error {
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 10px;
+}
+
 .image-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
+    justify-items: center;
 }
+
 .image-item {
     text-align: center;
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
 }
+
 .image-item img {
     max-width: 100%;
     height: auto;
+    border-radius: 5px;
+}
+
+.image-item h3 {
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.image-item p {
+    margin: 5px 0;
+    color: #7f8c8d;
 }
