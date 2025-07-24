@@ -3,54 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Compressor</title>
+    <meta name="description" content="Compress images efficiently using SVD with PixelSqueeze.">
+    <title>PixelSqueeze - Image Compression</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" type="image/svg+xml">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">PixelSqueeze</div>
-        <ul class="navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/how-it-works">How It Works?</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <h1>Image Compressor (SVD)</h1>
-        <form action="/compress" method="post" enctype="multipart/form-data">
-            <label for="image">Upload an RGB Image:</label>
-            <input type="file" id="image" name="image" accept="image/jpeg,image/png">
-            <label for="k_value">Select Quality (k value):</label>
-            <select id="k_value" name="k_value">
-                <option value="10">Low (k=10)</option>
-                <option value="50" selected>Medium (k=50)</option>
-                <option value="100">High (k=100)</option>
-                <option value="200">Very High (k=200)</option>
-            </select>
-            <button type="submit">Compress</button>
-        </form>
-
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-
-        {% if results %}
-            <h2>Results</h2>
-            <div class="image-grid">
-                <div class="image-item">
-                    <h3>Original Image</h3>
-                    <img src="{{ original_path }}" alt="Original Image">
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">PixelSqueeze</h1>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/how-it-works" class="nav-link">How It Works?</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h2>Optimize Your Images with Precision</h2>
+                <p>Upload an image and choose your compression quality using Singular Value Decomposition (SVD).</p>
+            </section>
+            <form action="/compress" method="post" enctype="multipart/form-data" class="form">
+                <div class="form-group">
+                    <label for="image" class="label">Upload Image:</label>
+                    <input type="file" id="image" name="image" accept="image/jpeg,image/png" class="input-file" aria-required="true">
                 </div>
-                {% for result in results %}
-                    <div class="image-item">
-                        <h3>Compressed (k={{ result.k }})</h3>
-                        <img src="{{ result.compressed_path }}" alt="Compressed k={{ result.k }}">
-                        <p>Compression Ratio: {{ result.compression_ratio }}</p>
-                        <p>PSNR: {{ result.psnr }} dB</p>
-                        <a href="{{ result.compressed_path }}" download>Download Compressed Image</a>
+                <div class="form-group">
+                    <label for="k_value" class="label">Quality (k value):</label>
+                    <select id="k_value" name="k_value" class="input-select" aria-label="Select compression quality">
+                        <option value="10">Low (k=10)</option>
+                        <option value="50" selected>Medium (k=50)</option>
+                        <option value="100">High (k=100)</option>
+                        <option value="200">Very High (k=200)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Compress Image</button>
+            </form>
+
+            {% if error %}
+                <p class="error" role="alert">{{ error }}</p>
+            {% endif %}
+
+            {% if results %}
+                <section class="results">
+                    <h2>Compression Results</h2>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <h3>Original Image</h3>
+                            <img src="{{ original_path }}" alt="Original Image" class="image">
+                        </div>
+                        {% for result in results %}
+                            <div class="image-item">
+                                <h3>Compressed (k={{ result.k }})</h3>
+                                <img src="{{ result.compressed_path }}" alt="Compressed Image k={{ result.k }}" class="image">
+                                <p>Compression Ratio: <span class="metric">{{ result.compression_ratio }}</span></p>
+                                <p>PSNR: <span class="metric">{{ result.psnr }} dB</span></p>
+                                <a href="{{ result.compressed_path }}" download class="btn-download">Download</a>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+                </section>
+            {% endif %}
+        </div>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2025 PixelSqueeze. All rights reserved.</p>
+    </footer>
 </body>
 </html>
