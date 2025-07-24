@@ -15,7 +15,8 @@
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="/" class="nav-link">Home</a></li>
-                    <li><a href="/how-it-works" class="nav-link">How It Works?</a></li>
+                    <li><a href="/how-it-works" class="nav-link active">How It Works?</a></li>
+                    <li><a href="/compress" class="nav-link">Get Started</a></li>
                 </ul>
             </nav>
         </div>
@@ -26,43 +27,40 @@
             <section class="content-section">
                 <h2 class="collapsible">What is a Digital Image? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>A digital image is a grid of pixels, each representing a tiny dot of color. These pixels use RGB values (0-255 for red, green, blue) to define colors, creating a detailed visual. For instance, a 1920x1080 image has over 2 million pixels, leading to large data sizes.</p>
+                    <p>A digital image is a grid of pixels, each a colored dot defined by RGB values (0-255). A 1920x1080 image has over 2 million pixels, creating large data sizes.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">Why Compress Images? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>Compression reduces file size by eliminating redundant data, making images easier to store and share, especially for web or mobile use, while maintaining acceptable quality.</p>
+                    <p>Compression reduces file size by removing redundant data, ideal for web or mobile use while preserving quality.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">How Does SVD Work? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>Singular Value Decomposition (SVD) breaks a matrix (e.g., an image channel) into three parts:</p>
+                    <p>SVD decomposes a matrix into:</p>
                     <ul>
-                        <li><strong>U</strong>: Left singular vectors (spatial patterns).</li>
-                        <li><strong>S</strong>: Singular values (importance, sorted descending).</li>
-                        <li><strong>V</strong>: Right singular vectors (feature patterns).</li>
+                        <li><strong>U</strong>: Spatial patterns.</li>
+                        <li><strong>S</strong>: Importance values.</li>
+                        <li><strong>V</strong>: Feature patterns.</li>
                     </ul>
-                    <p>By keeping only the top <em>k</em> singular values, we approximate the matrix, reducing data. The reconstruction uses: <em>U[:, :k] @ diag(S[:k]) @ V[:k, :]</em>, balancing quality and size based on your chosen <em>k</em>.</p>
+                    <p>Keeping top <em>k</em> values approximates the matrix, balancing quality and size.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">PixelSqueeze Process <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>PixelSqueeze applies SVD to each RGB channel:</p>
+                    <p>Applies SVD to RGB channels:</p>
                     <ol>
-                        <li>Decomposes the image into U, S, and V.</li>
-                        <li>Retains the top <em>k</em> values for compression.</li>
-                        <li>Reconstructs the image, computing compression ratio and PSNR.</li>
+                        <li>Decomposes into U, S, V.</li>
+                        <li>Retains top <em>k</em> values.</li>
+                        <li>Reconstructs with metrics.</li>
                     </ol>
                 </div>
             </section>
         </div>
     </main>
-    <footer class="footer">
-        <p>&copy; 2025 PixelSqueeze. All rights reserved.</p>
-    </footer>
     <script>
         document.querySelectorAll('.collapsible').forEach(header => {
             header.addEventListener('click', () => {
