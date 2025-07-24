@@ -33,7 +33,7 @@ def compress_image_svd(r_channel, g_channel, b_channel, k):
         k (int): Number of singular values to keep.
     
     Returns:
-        tuple: Compressed image array, compressed R, G, B channels.
+        tuple: Compressed image array, compressed R, G, B channels, SVD components.
     """
     U_r, S_r, Vt_r = np.linalg.svd(r_channel, full_matrices=False)
     U_g, S_g, Vt_g = np.linalg.svd(g_channel, full_matrices=False)
@@ -76,9 +76,8 @@ def calculate_compression_ratio(original_shape, k, U_r_k, S_r_k, Vt_r_k, U_g_k, 
         float: Compression ratio (original size / compressed size).
     """
     height, width, channels = original_shape
-    original_size = height * width * channels  # Total pixels in original image
+    original_size = height * width * channels
     
-    # Compressed size: sum of elements in U_k, S_k, Vt_k for each channel
     compressed_size = 0
     for U_k, S_k, Vt_k in [(U_r_k, S_r_k, Vt_r_k), (U_g_k, S_g_k, Vt_g_k), (U_b_k, S_b_k, Vt_b_k)]:
         compressed_size += U_k.size + S_k.diagonal().size + Vt_k.size
@@ -114,7 +113,7 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     Returns:
         list: List of dictionaries with k, compressed_path, compression_ratio, psnr.
     """
-    os.makedirs("frontend/static/uploads", exist_ok=True)
+    os.makedirs("/uploads", exist_ok=True)
     img_array, r_channel, g_channel, b_channel = load_and_preprocess_image(image_path)
     
     results = []
@@ -128,7 +127,7 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     for i, k in enumerate(k_values, 1):
         compressed_image, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k)
         
-        compressed_path = f"frontend/static/uploads/compressed_k{k}.jpg"
+        compressed_path = f"/uploads/compressed_k{k}.jpg"
         Image.fromarray(compressed_image).save(compressed_path)
         
         compression_ratio = calculate_compression_ratio(img_array.shape, k, *r_svd, *g_svd, *b_svd)
@@ -152,7 +151,7 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     return results
 
 if __name__ == "__main__":
-    sample_image_path = "/home/sumanthd032/Projects/PixelSqueeze/image-compressor/sample_image.jpg"
+    sample_image_path = "image-compressor/sample_image.jpg"
     results = test_compression(sample_image_path, k_values=[10, 50, 100])
     for result in results:
         print(f"k={result['k']}: Compression Ratio={result['compression_ratio']:.2f}, PSNR={result['psnr']:.2f} dB")

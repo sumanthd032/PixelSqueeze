@@ -1,0 +1,18 @@
+/* Basic styling to ensure layout works */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.image-item {
+    text-align: center;
+}
+.image-item img {
+    max-width: 100%;
+    height: auto;
+}

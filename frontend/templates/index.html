@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compressor</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Compressor (SVD)</h1>
+        <form action="/compress" method="post" enctype="multipart/form-data">
+            <label for="image">Upload an RGB Image:</label>
+            <input type="file" id="image" name="image" accept="image/jpeg,image/png">
+            <button type="submit">Compress</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if results %}
+            <h2>Results</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <h3>Original Image</h3>
+                    <img src="{{ original_path }}" alt="Original Image">
+                </div>
+                {% for result in results %}
+                    <div class="image-item">
+                        <h3>Compressed (k={{ result.k }})</h3>
+                        <img src="{{ result.compressed_path }}" alt="Compressed k={{ result.k }}">
+                        <p>Compression Ratio: {{ result.compression_ratio }}</p>
+                        <p>PSNR: {{ result.psnr }} dB</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
