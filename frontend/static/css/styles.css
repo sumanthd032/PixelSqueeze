@@ -1,4 +1,4 @@
-/* Modern and minimalistic UI/UX with enhanced interactivity */
+/* Fully responsive UI/UX with maximized screen coverage */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 body {
@@ -8,6 +8,9 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -17,10 +20,11 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    width: 100%;
 }
 
 .header-content {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
@@ -56,13 +60,19 @@ body {
 }
 
 .main {
+    flex: 1;
     padding: 20px 0;
+    width: 100%;
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .hero {
@@ -71,7 +81,6 @@ body {
     background-color: #F3F4F6;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
 }
 
 .hero-title {
@@ -89,7 +98,6 @@ body {
 
 .features {
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .features-title {
@@ -341,7 +349,7 @@ body {
     .hero-subtitle {
         font-size: 0.9rem;
     }
-    .feature-grid {
+    .feature-grid, .image-grid {
         grid-template-columns: 1fr;
     }
     .form-card {
@@ -353,14 +361,14 @@ body {
         align-items: flex-start;
         gap: 5px;
     }
-    .image-grid {
-        grid-template-columns: 1fr;
+    .btn {
+        width: 100%;
+        text-align: center;
     }
 }
 
 @media (min-width: 601px) {
     .main {
-        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -369,7 +377,7 @@ body {
         max-height: 100vh;
         overflow-y: auto;
     }
-    .hero, .features {
+    .hero, .features, .results {
         margin: 10px 0;
         padding: 15px;
     }
