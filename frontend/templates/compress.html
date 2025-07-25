@@ -24,17 +24,17 @@
     <main class="main">
         <div class="container">
             <section class="hero">
-                <h2>Compress Your Image</h2>
-                <p>Upload and tailor your compression with ease.</p>
+                <h2 class="hero-title">Compress Your Image</h2>
+                <p class="hero-subtitle">Upload and customize with ease.</p>
             </section>
-            <form action="/compress" method="post" enctype="multipart/form-data" class="form">
+            <form action="/compress" method="post" enctype="multipart/form-data" class="form-card">
                 <div class="form-group">
                     <label for="image" class="label">Upload Image:</label>
-                    <input type="file" id="image" name="image" accept="image/jpeg,image/png" class="input-file" aria-required="true">
+                    <input type="file" id="image" name="image" accept="image/jpeg,image/png" class="input-file">
                 </div>
                 <div class="form-group">
                     <label for="k_value" class="label">Quality (k value):</label>
-                    <select id="k_value" name="k_value" class="input-select" aria-label="Select compression quality">
+                    <select id="k_value" name="k_value" class="input-select">
                         <option value="10">Low (k=10)</option>
                         <option value="50" selected>Medium (k=50)</option>
                         <option value="100">High (k=100)</option>
@@ -45,24 +45,24 @@
             </form>
 
             {% if error %}
-                <p class="error" role="alert">{{ error }}</p>
+                <div class="alert error" role="alert">{{ error }}</div>
             {% endif %}
 
             {% if results %}
                 <section class="results">
-                    <h2>Compression Results</h2>
+                    <h2 class="results-title">Compression Results</h2>
                     <div class="image-grid">
-                        <div class="image-item">
+                        <div class="image-card">
                             <h3>Original Image</h3>
                             <img src="{{ original_path }}" alt="Original Image" class="image">
                         </div>
                         {% for result in results %}
-                            <div class="image-item">
+                            <div class="image-card">
                                 <h3>Compressed (k={{ result.k }})</h3>
                                 <img src="{{ result.compressed_path }}" alt="Compressed Image k={{ result.k }}" class="image">
                                 <p>Compression Ratio: <span class="metric">{{ result.compression_ratio }}</span></p>
                                 <p>PSNR: <span class="metric">{{ result.psnr }} dB</span></p>
-                                <a href="{{ result.compressed_path }}" download class="btn-download">Download <span class="icon">⬇️</span></a>
+                                <a href="{{ result.compressed_path }}" download class="btn btn-secondary">Download <span class="icon">⬇️</span></a>
                             </div>
                         {% endfor %}
                     </div>

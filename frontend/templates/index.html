@@ -25,52 +25,50 @@
         <div class="container">
             <section class="hero">
                 <h2 class="hero-title">Welcome to PixelSqueeze</h2>
-                <p class="hero-subtitle">Revolutionize your image compression with cutting-edge SVD technology.</p>
+                <p class="hero-subtitle">Smart SVD-powered image compression.</p>
+                <a href="/compress" class="btn btn-primary">Get Started</a>
             </section>
             <section class="features">
-                <h2 class="features-title">Discover Our Features</h2>
+                <h2 class="features-title">Why Choose Us</h2>
                 <div class="feature-grid">
                     <div class="feature-card">
                         <span class="icon">🎨</span>
                         <h3>Custom Quality</h3>
-                        <p>Adjust compression with your preferred k value for the perfect balance.</p>
+                        <p>Tune compression with adjustable k values.</p>
                     </div>
                     <div class="feature-card">
                         <span class="icon">⬇️</span>
                         <h3>Instant Downloads</h3>
-                        <p>Download compressed images instantly with ease.</p>
+                        <p>Quick access to compressed files.</p>
                     </div>
                     <div class="feature-card">
                         <span class="icon">⚡</span>
                         <h3>Efficient Compression</h3>
-                        <p>Reduce file sizes effectively using advanced SVD techniques.</p>
+                        <p>Optimize sizes with SVD technology.</p>
                     </div>
                 </div>
-                <a href="/compress" class="btn btn-primary">Get Started Now</a>
             </section>
         </div>
     </main>
     <script>
-        // Fade-in animation for feature cards
         document.querySelectorAll('.feature-card').forEach((card, index) => {
             card.style.opacity = '0';
             setTimeout(() => {
-                card.style.transition = 'opacity 0.5s ease-in-out';
+                card.style.transition = 'opacity 0.4s ease-in-out';
                 card.style.opacity = '1';
-            }, index * 300);
+            }, index * 150);
         });
 
-        // Hero animation
         const heroTitle = document.querySelector('.hero-title');
         const heroSubtitle = document.querySelector('.hero-subtitle');
         heroTitle.style.opacity = '0';
         heroSubtitle.style.opacity = '0';
         setTimeout(() => {
-            heroTitle.style.transition = 'opacity 1s ease-in';
-            heroSubtitle.style.transition = 'opacity 1s ease-in';
+            heroTitle.style.transition = 'opacity 0.8s ease-in';
+            heroSubtitle.style.transition = 'opacity 0.8s ease-in';
             heroTitle.style.opacity = '1';
             heroSubtitle.style.opacity = '1';
-        }, 500);
+        }, 200);
     </script>
 </body>
 </html>

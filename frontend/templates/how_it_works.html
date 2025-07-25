@@ -23,40 +23,44 @@
     </header>
     <main class="main">
         <div class="container">
-            <h1>How PixelSqueeze Works?</h1>
+            <h1>How PixelSqueeze Works</h1>
             <section class="content-section">
                 <h2 class="collapsible">What is a Digital Image? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>A digital image is a grid of pixels, each a colored dot defined by RGB values (0-255). A 1920x1080 image has over 2 million pixels, creating large data sizes.</p>
+                    <p>A digital image consists of a grid of pixels, each representing a tiny dot of color defined by RGB values ranging from 0 to 255 (red, green, blue). For example, a 1920x1080 resolution image contains over 2 million pixels, resulting in significant data storage requirements. These images are widely used in photography, web design, and digital media, necessitating efficient management techniques.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">Why Compress Images? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>Compression reduces file size by removing redundant data, ideal for web or mobile use while preserving quality.</p>
+                    <p>Image compression is essential to reduce file sizes by eliminating redundant or less critical data, making images easier to store, share, and load online. This is particularly important for websites to improve loading speeds, for mobile devices to save storage, and for archiving large datasets. Compression balances quality and size, ensuring usability without significant visual loss.</p>
+                    <p>Benefits include faster website performance, reduced bandwidth usage, and compatibility with various platforms, enhancing user experience across devices.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">How Does SVD Work? <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>SVD decomposes a matrix into:</p>
+                    <p>Singular Value Decomposition (SVD) is a mathematical technique that decomposes a matrix into three components:</p>
                     <ul>
-                        <li><strong>U</strong>: Spatial patterns.</li>
-                        <li><strong>S</strong>: Importance values.</li>
-                        <li><strong>V</strong>: Feature patterns.</li>
+                        <li><strong>U</strong>: A matrix of left singular vectors representing spatial patterns.</li>
+                        <li><strong>S</strong>: A diagonal matrix of singular values indicating data importance, sorted in descending order.</li>
+                        <li><strong>V</strong>: A matrix of right singular vectors representing feature patterns.</li>
                     </ul>
-                    <p>Keeping top <em>k</em> values approximates the matrix, balancing quality and size.</p>
+                    <p>By retaining only the top <em>k</em> singular values and their corresponding vectors, SVD approximates the original matrix, reducing dimensionality. This process, expressed as <em>U[:, :k] @ diag(S[:k]) @ V[:k, :]</em>, allows for efficient data compression while preserving essential image details, adjustable based on the chosen <em>k</em> value.</p>
+                    <p>SVD is widely used in image processing, data analysis, and machine learning due to its ability to capture the most significant features with minimal loss.</p>
                 </div>
             </section>
             <section class="content-section">
                 <h2 class="collapsible">PixelSqueeze Process <span class="toggle">+</span></h2>
                 <div class="content">
-                    <p>Applies SVD to RGB channels:</p>
+                    <p>PixelSqueeze leverages SVD to compress images through the following steps:</p>
                     <ol>
-                        <li>Decomposes into U, S, V.</li>
-                        <li>Retains top <em>k</em> values.</li>
-                        <li>Reconstructs with metrics.</li>
+                        <li><strong>Decomposition</strong>: Splits each RGB channel of the image into U, S, and V matrices.</li>
+                        <li><strong>Reduction</strong>: Selects the top <em>k</em> singular values to minimize data while retaining quality.</li>
+                        <li><strong>Reconstruction</strong>: Rebuilds the image using the reduced matrices, calculating compression ratio and PSNR (Peak Signal-to-Noise Ratio) to evaluate performance.</li>
+                        <li><strong>Output</strong>: Provides the compressed image with metrics for user review.</li>
                     </ol>
+                    <p>This process ensures high efficiency and customizable quality, making PixelSqueeze ideal for professional and personal use.</p>
                 </div>
             </section>
         </div>
