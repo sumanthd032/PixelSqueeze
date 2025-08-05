@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Compress images efficiently with PixelSqueeze using SVD technology.">
     <title>PixelSqueeze - Smart Image Compression</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" type="image/svg+xml">
-    <!-- Google Fonts for a nicer typeface -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,44 +23,59 @@
     </script>
     <style>
         .nav-link.active {
-            background-color: #4f46e5;
+            background-color: #4f46e5; /* indigo-600 */
             color: #fff;
         }
     </style>
 </head>
 <body class="h-full font-sans antialiased">
 
-<div class="flex flex-col h-screen">
+<div class="flex flex-col min-h-screen">
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 shadow-sm z-10">
+    <header class="bg-white border-b border-gray-200 shadow-sm z-20 sticky top-0">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="/" class="text-2xl font-bold text-gray-800">PixelSqueeze</a>
-                <nav class="flex space-x-2 items-center">
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-2 items-center">
                     <a href="/" class="nav-link text-gray-600 font-medium py-2 px-3 rounded-lg transition active">Home</a>
                     <a href="/how-it-works" class="nav-link text-gray-600 hover:bg-gray-100 font-medium py-2 px-3 rounded-lg transition">How It Works</a>
                     <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">Get Started</a>
                 </nav>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
             </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <nav class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="/" class="block nav-link text-gray-600 font-medium py-2 px-3 rounded-lg active">Home</a>
+                <a href="/how-it-works" class="block nav-link text-gray-600 hover:bg-gray-100 font-medium py-2 px-3 rounded-lg transition">How It Works</a>
+                <a href="/compress" class="block bg-indigo-600 hover:bg-indigo-700 text-white text-center font-semibold py-2 px-4 rounded-lg shadow-md transition mt-2">Get Started</a>
+            </nav>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="flex-grow">
         <!-- Hero Section -->
-        <section class="text-center py-24 bg-white">
+        <section class="text-center py-20 sm:py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">Smart Image Compression</h1>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">Leverage the power of Singular Value Decomposition to intelligently reduce image file sizes without sacrificing quality.</p>
-                <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition transform hover:scale-105 inline-block">Compress Your First Image</a>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">Smart Image Compression</h1>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8">Leverage the power of Singular Value Decomposition to intelligently reduce image file sizes without sacrificing quality.</p>
+                <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full shadow-lg transition transform hover:scale-105 inline-block">Compress Your First Image</a>
             </div>
         </section>
 
         <!-- Features Section -->
         <section class="py-20 bg-gray-50">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">Why Choose PixelSqueeze?</h2>
-                <div class="grid md:grid-cols-3 gap-8">
+                <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-16">Why Choose PixelSqueeze?</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Feature 1 -->
                     <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
                         <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6">
@@ -80,7 +93,7 @@
                         <p class="text-gray-600">Leverages Singular Value Decomposition for intelligent, high-quality image compression.</p>
                     </div>
                     <!-- Feature 3 -->
-                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 md:col-span-2 lg:col-span-1">
                         <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6">
                             <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         </div>
@@ -99,6 +112,12 @@
         </div>
     </footer>
 </div>
+
+<script>
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+</script>
 
 </body>
 </html>
