@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Compress your images with PixelSqueeze using SVD.">
     <title>Compress Image - PixelSqueeze</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" type="image/svg+xml">
-    <!-- Google Fonts for a nicer typeface -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,31 +22,9 @@
         }
     </script>
     <style>
-        .nav-link.active {
-            background-color: #4f46e5;
-            color: #fff;
-        }
-        /* Custom styles for the range slider thumb */
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #4f46e5;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #ddd;
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #4f46e5;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #ddd;
-        }
+        .nav-link.active { background-color: #4f46e5; color: #fff; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #4f46e5; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 0 2px #ddd; }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: #4f46e5; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 0 2px #ddd; }
     </style>
 </head>
 <body class="h-full font-sans antialiased">
@@ -68,97 +44,54 @@
         </div>
     </header>
 
-    <!-- Main Content with Two-Panel Layout -->
+    <!-- Main Content -->
     <main class="flex-grow flex flex-col md:flex-row overflow-hidden">
         
         <!-- Left Panel: Controls -->
         <aside class="w-full md:w-96 bg-white border-r border-gray-200 p-6 lg:p-8 flex-shrink-0 overflow-y-auto">
-            <form action="/compress" method="post" enctype="multipart/form-data" id="compress-form" class="space-y-8 h-full flex flex-col">
+            <div id="controls-panel" class="space-y-8 h-full flex flex-col">
                 <div class="flex-grow space-y-8">
-                    <!-- Step 1: Drag and Drop Uploader -->
+                    <!-- Step 1: Uploader -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">1. Upload Image</h3>
                         <div id="drop-zone" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl text-center cursor-pointer hover:bg-gray-50 transition">
                             <svg class="w-12 h-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
-                            <p id="drop-zone-text" class="mt-2 text-sm text-gray-600">Drag & drop or <span class="font-semibold text-indigo-600">click to upload</span></p>
-                            <p class="text-xs text-gray-500">PNG, JPG, WEBP</p>
+                            <p id="drop-zone-text" class="mt-2 text-sm text-gray-600">Drag & drop or <span class="font-semibold text-teal-600">click to upload</span></p>
+                            <p class="text-xs text-gray-500">PNG, JPG, WEBP (Max 10MB)</p>
                         </div>
-                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/webp" required class="hidden">
+                        <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" class="hidden">
                     </div>
 
                     <!-- Step 2: Quality Slider -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">2. Adjust Quality</h3>
                         <label for="k_value" class="block text-sm text-gray-600 mb-3">Singular values (k) = <span id="k_value_display" class="font-semibold text-gray-900">50</span></label>
-                        <input type="range" id="k_value" name="k_value" min="1" max="200" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <input type="range" id="k_value" min="1" max="200" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     </div>
                 </div>
 
                 <!-- Step 3: Submit Button -->
                 <div class="flex-shrink-0">
-                    <button type="submit" id="compress-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition transform hover:scale-105 flex items-center justify-center space-x-3 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                    <button id="compress-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition transform hover:scale-105 flex items-center justify-center space-x-3 disabled:bg-teal-400 disabled:cursor-not-allowed">
                         <span id="btn-text">Compress Image</span>
                         <svg id="loader" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     </button>
                 </div>
-            </form>
+            </div>
         </aside>
 
         <!-- Right Panel: Results -->
         <section class="flex-grow bg-gray-50 p-6 lg:p-8 overflow-y-auto">
             {% if error %}
                 <div class="h-full flex items-center justify-center">
-                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-lg max-w-md mx-auto" role="alert">
-                        <p class="font-bold text-lg">An Error Occurred</p>
-                        <p>{{ error }}</p>
-                    </div>
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-lg max-w-md mx-auto" role="alert"><p class="font-bold text-lg">An Error Occurred</p><p>{{ error }}</p></div>
                 </div>
             {% else %}
                 <div id="results-section" class="h-full">
-                    <!-- Initial Placeholder -->
-                    <div id="placeholder" class="h-full flex flex-col items-center justify-center text-center text-gray-500">
-                        <svg class="w-24 h-24 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                        <h3 class="text-xl font-semibold">Your images will appear here</h3>
-                        <p>Upload an image to get started</p>
-                    </div>
-
-                    <!-- Client-side preview will replace the placeholder -->
-                    <div id="preview-card" class="hidden h-full flex flex-col items-center justify-center">
-                        <div class="w-full max-w-4xl bg-white p-4 rounded-xl shadow-lg border border-gray-200">
-                            <h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Original Preview</h3>
-                            <img src="" alt="Your uploaded image" id="image-preview" class="rounded-lg w-full max-h-[70vh] object-contain">
-                        </div>
-                    </div>
-
-                    <!-- Container for server-rendered results -->
+                    <div id="placeholder" class="h-full flex flex-col items-center justify-center text-center text-gray-500"><svg class="w-24 h-24 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg><h3 class="text-xl font-semibold">Your images will appear here</h3><p>Upload an image to get started</p></div>
+                    <div id="preview-card" class="hidden h-full flex flex-col items-center justify-center"><div class="w-full max-w-4xl bg-white p-4 rounded-xl shadow-lg border border-gray-200"><h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Original Preview</h3><img src="" alt="Your uploaded image" id="image-preview" class="rounded-lg w-full max-h-[70vh] object-contain"></div></div>
                     <div id="server-results-container" class="hidden">
-                        {% if results %}
-                            <div class="grid lg:grid-cols-2 gap-8 items-start">
-                                <!-- Original Image Card -->
-                                <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-200">
-                                    <h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Original Image</h3>
-                                    <img src="{{ original_path }}" alt="Original Image" class="rounded-lg w-full">
-                                </div>
-                                <!-- Compressed Image Card -->
-                                {% for result in results %}
-                                <div class="bg-white p-4 rounded-xl shadow-lg border border-indigo-500 ring-2 ring-indigo-200">
-                                    <h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Compressed (k={{ result.k }})</h3>
-                                    <img src="{{ result.compressed_path }}" alt="Compressed Image k={{ result.k }}" class="rounded-lg w-full">
-                                    <div class="mt-6 p-4 bg-gray-50 rounded-lg space-y-3">
-                                        <div class="flex justify-between items-center text-sm">
-                                            <p class="font-medium text-gray-600">Compression Ratio:</p>
-                                            <p class="font-bold text-lg text-indigo-600">{{ result.compression_ratio }}x</p>
-                                        </div>
-                                        <div class="flex justify-between items-center text-sm">
-                                            <p class="font-medium text-gray-600">PSNR:</p>
-                                            <p class="font-bold text-lg text-indigo-600">{{ result.psnr }} dB</p>
-                                        </div>
-                                    </div>
-                                    <a href="{{ result.compressed_path }}" download class="mt-6 block w-full text-center bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition">Download Compressed Image</a>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                        {% if results %}<div class="grid lg:grid-cols-2 gap-8 items-start"><div class="bg-white p-4 rounded-xl shadow-lg border border-gray-200"><h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Original Image</h3><img src="{{ original_path }}" alt="Original Image" class="rounded-lg w-full"></div>{% for result in results %}<div class="bg-white p-4 rounded-xl shadow-lg border border-teal-500 ring-2 ring-teal-200"><h3 class="text-xl font-semibold text-gray-900 mb-4 px-2">Compressed (k={{ result.k }})</h3><img src="{{ result.compressed_path }}" alt="Compressed Image k={{ result.k }}" class="rounded-lg w-full"><div class="mt-6 p-4 bg-gray-50 rounded-lg space-y-3"><div class="flex justify-between items-center text-sm"><p class="font-medium text-gray-600">Compression Ratio:</p><p class="font-bold text-lg text-teal-600">{{ result.compression_ratio }}x</p></div><div class="flex justify-between items-center text-sm"><p class="font-medium text-gray-600">PSNR:</p><p class="font-bold text-lg text-teal-600">{{ result.psnr }} dB</p></div></div><a href="{{ result.compressed_path }}" download class="mt-6 block w-full text-center bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition">Download Compressed Image</a></div>{% endfor %}</div>{% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -167,95 +100,130 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const dropZone = document.getElementById('drop-zone');
-        const dropZoneText = document.getElementById('drop-zone-text');
-        const imageInput = document.getElementById('image');
-        const compressForm = document.getElementById('compress-form');
-        const compressBtn = document.getElementById('compress-btn');
-        const btnText = document.getElementById('btn-text');
-        const loader = document.getElementById('loader');
-        const kSlider = document.getElementById('k_value');
-        const kDisplay = document.getElementById('k_value_display');
-        const placeholder = document.getElementById('placeholder');
-        const previewCard = document.getElementById('preview-card');
-        const imagePreview = document.getElementById('image-preview');
-        const serverResultsContainer = document.getElementById('server-results-container');
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById('drop-zone');
+    const dropZoneText = document.getElementById('drop-zone-text');
+    const imageInput = document.getElementById('image-input');
+    const compressBtn = document.getElementById('compress-btn');
+    const btnText = document.getElementById('btn-text');
+    const loader = document.getElementById('loader');
+    const kSlider = document.getElementById('k_value');
+    const kDisplay = document.getElementById('k_value_display');
+    const placeholder = document.getElementById('placeholder');
+    const previewCard = document.getElementById('preview-card');
+    const imagePreview = document.getElementById('image-preview');
+    const serverResultsContainer = document.getElementById('server-results-container');
 
-        // --- Drag and Drop Logic ---
-        dropZone?.addEventListener('click', () => imageInput.click());
-        dropZone?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('bg-indigo-50', 'border-indigo-400');
-        });
-        dropZone?.addEventListener('dragleave', () => {
-            dropZone.classList.remove('bg-indigo-50', 'border-indigo-400');
-        });
-        dropZone?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('bg-indigo-50', 'border-indigo-400');
-            if (e.dataTransfer.files.length) {
-                imageInput.files = e.dataTransfer.files;
-                handleFileChange();
-            }
-        });
+    let uploadedFile = null;
 
-        // --- Handle File Change (from click or drop) ---
-        const handleFileChange = () => {
-            if (serverResultsContainer) serverResultsContainer.classList.add('hidden');
-            placeholder?.classList.add('hidden');
-            
-            const file = imageInput.files[0];
-            if (file) {
-                dropZoneText.textContent = file.name;
-                dropZone.classList.add('border-green-500');
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const imageUrl = e.target.result;
-                    imagePreview.src = imageUrl;
-                    previewCard.classList.remove('hidden');
-
-                    const img = new Image();
-                    img.onload = () => {
-                        const maxK = Math.min(img.width, img.height);
-                        kSlider.max = maxK;
-                        if (parseInt(kSlider.value) > maxK) {
-                            kSlider.value = maxK;
-                            kDisplay.textContent = maxK;
-                        }
-                    };
-                    img.src = imageUrl;
-                }
-                reader.readAsDataURL(file);
-            }
-        };
-        imageInput?.addEventListener('change', handleFileChange);
-
-        // --- Form Submission ---
-        compressForm?.addEventListener('submit', (e) => {
-            if (imageInput.files.length === 0) {
-                e.preventDefault();
-                alert("Please select an image file first.");
-                return;
-            }
-            compressBtn.disabled = true;
-            btnText.textContent = 'Compressing...';
-            loader.classList.remove('hidden');
-        });
-
-        // --- K-Slider Display ---
-        kSlider?.addEventListener('input', () => { 
-            kDisplay.textContent = kSlider.value; 
-        });
+    const handleFileChange = (file) => {
+        if (!file) return;
+        // Cloudinary free tier has a 10MB limit
+        if (file.size > 10 * 1024 * 1024) {
+            alert("File is too large. Please select a file smaller than 10MB.");
+            return;
+        }
+        uploadedFile = file;
         
-        // --- Show server results if they exist on page load ---
-        if (serverResultsContainer && serverResultsContainer.innerHTML.trim() !== '') {
-            placeholder?.classList.add('hidden');
-            previewCard.classList.add('hidden');
-            serverResultsContainer.classList.remove('hidden');
+        if (serverResultsContainer) serverResultsContainer.classList.add('hidden');
+        placeholder?.classList.add('hidden');
+        dropZoneText.textContent = file.name;
+        dropZone.classList.add('border-green-500');
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const imageUrl = e.target.result;
+            imagePreview.src = imageUrl;
+            previewCard.classList.remove('hidden');
+            const img = new Image();
+            img.onload = () => {
+                const maxK = Math.min(img.width, img.height);
+                kSlider.max = maxK;
+                if (parseInt(kSlider.value) > maxK) {
+                    kSlider.value = maxK;
+                    kDisplay.textContent = maxK;
+                }
+            };
+            img.src = imageUrl;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    dropZone?.addEventListener('click', () => imageInput.click());
+    dropZone?.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('bg-teal-50', 'border-teal-400'); });
+    dropZone?.addEventListener('dragleave', () => dropZone.classList.remove('bg-teal-50', 'border-teal-400'));
+    dropZone?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-teal-50', 'border-teal-400');
+        if (e.dataTransfer.files.length) handleFileChange(e.dataTransfer.files[0]);
+    });
+    imageInput?.addEventListener('change', () => handleFileChange(imageInput.files[0]));
+    kSlider?.addEventListener('input', () => { kDisplay.textContent = kSlider.value; });
+
+    compressBtn?.addEventListener('click', async () => {
+        if (!uploadedFile) {
+            alert("Please select an image file first.");
+            return;
+        }
+        
+        compressBtn.disabled = true;
+        btnText.textContent = 'Uploading...';
+        loader.classList.remove('hidden');
+
+        try {
+            // 1. Get signature from our backend
+            const sigResponse = await fetch('/api/get-upload-signature', { method: 'POST' });
+            if (!sigResponse.ok) throw new Error('Could not get upload signature.');
+            const sigData = await sigResponse.json();
+
+            // 2. Upload file directly to Cloudinary
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+            formData.append('api_key', sigData.api_key);
+            formData.append('timestamp', sigData.timestamp);
+            formData.append('signature', sigData.signature);
+            formData.append('folder', 'pixelsqueeze/originals');
+
+            const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`;
+            const uploadResponse = await fetch(cloudinaryUrl, { method: 'POST', body: formData });
+            if (!uploadResponse.ok) throw new Error('Cloudinary upload failed.');
+            const uploadData = await uploadResponse.json();
+            const imageUrl = uploadData.secure_url;
+
+            // 3. Send the URL to our backend for compression
+            btnText.textContent = 'Compressing...';
+            const compressResponse = await fetch('/compress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    imageUrl: imageUrl,
+                    kValue: kSlider.value
+                })
+            });
+
+            if (!compressResponse.ok) throw new Error('Compression failed on the server.');
+            
+            // The server responds with the full HTML page, so we just replace the document
+            const resultHtml = await compressResponse.text();
+            document.open();
+            document.write(resultHtml);
+            document.close();
+
+        } catch (error) {
+            alert(`An error occurred: ${error.message}`);
+            compressBtn.disabled = false;
+            btnText.textContent = 'Compress Image';
+            loader.classList.add('hidden');
         }
     });
+    
+    // Show server results if they exist on page load
+    if (serverResultsContainer && serverResultsContainer.innerHTML.trim() !== '') {
+        placeholder?.classList.add('hidden');
+        previewCard.classList.add('hidden');
+        serverResultsContainer.classList.remove('hidden');
+    }
+});
 </script>
 
 </body>
