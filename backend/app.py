@@ -4,16 +4,24 @@ import sys
 from werkzeug.utils import secure_filename
 from PIL import Image
 import io
-import base64
 
-# Add parent directory to path to find the compressor module
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from compressor import load_and_preprocess_image, compress_image_svd, calculate_compression_ratio, calculate_psnr
 
-# Initialize Flask app
 app = Flask(__name__,
             template_folder=os.path.join(os.path.dirname(__file__), '../frontend/templates'),
             static_folder=os.path.join(os.path.dirname(__file__), '../frontend/static'))
+
+cloudinary.config(
+  cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
+  api_key = os.getenv("CLOUDINARY_API_KEY"), 
+  api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+  secure = True
+)
 
 @app.route('/')
 def index():
@@ -35,10 +43,8 @@ def compress():
         
         if file:
             try:
-                # Read the uploaded file into memory
                 original_image_bytes = file.read()
                 
-                # Process image from the in-memory bytes
                 img_array, r_channel, g_channel, b_channel = load_and_preprocess_image(io.BytesIO(original_image_bytes))
             except Exception as e:
                 return render_template('compress.html', error=f"Error loading image. It might be corrupted or in an unsupported format. Details: {str(e)}")
@@ -52,42 +58,45 @@ def compress():
             except ValueError as e:
                 return render_template('compress.html', error=str(e) or "Invalid k value. Please enter a positive integer.")
 
-            # --- VERCEL FIX: Process and serve images from memory using Base64 ---
 
-            # 1. Compress the image
-            compressed_image_array, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k_value)
-            
-            # 2. Convert compressed numpy array to an image and save to a memory buffer
-            compressed_pil_image = Image.fromarray(compressed_image_array)
-            buffer = io.BytesIO()
-            # Determine image format from original filename
-            file_format = file.filename.split('.')[-1].upper()
-            if file_format not in ['JPEG', 'PNG', 'WEBP']:
-                file_format = 'JPEG' # Default to JPEG
-            compressed_pil_image.save(buffer, format=file_format)
-            compressed_image_bytes = buffer.getvalue()
+            try:
+                original_upload_result = cloudinary.uploader.upload(
+                    io.BytesIO(original_image_bytes),
+                    folder="pixelsqueeze/originals"
+                )
+                original_url = original_upload_result.get('secure_url')
 
-            # 3. Encode both original and compressed images as Base64 strings
-            original_base64 = base64.b64encode(original_image_bytes).decode('utf-8')
-            compressed_base64 = base64.b64encode(compressed_image_bytes).decode('utf-8')
-            
-            # 4. Create data URIs for embedding in the HTML
-            mime_type = f"image/{file_format.lower()}"
-            original_data_uri = f"data:{mime_type};base64,{original_base64}"
-            compressed_data_uri = f"data:{mime_type};base64,{compressed_base64}"
+                compressed_image_array, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k_value)
+                
+                compressed_pil_image = Image.fromarray(compressed_image_array)
+                buffer = io.BytesIO()
+                file_format = file.filename.split('.')[-1].upper()
+                if file_format not in ['JPEG', 'PNG', 'WEBP']:
+                    file_format = 'JPEG'
+                compressed_pil_image.save(buffer, format=file_format)
+                compressed_image_bytes = buffer.getvalue()
 
-            # Calculate Metrics
+                compressed_upload_result = cloudinary.uploader.upload(
+                    io.BytesIO(compressed_image_bytes),
+                    folder="pixelsqueeze/compressed"
+                )
+                compressed_url = compressed_upload_result.get('secure_url')
+
+            except Exception as e:
+                return render_template('compress.html', error=f"Error uploading to cloud storage: {str(e)}")
+
+
             compression_ratio = calculate_compression_ratio(img_array.shape, k_value, *r_svd, *g_svd, *b_svd)
             psnr = calculate_psnr(img_array, compressed_image_array)
             
             results = [{
                 'k': k_value,
-                'compressed_path': compressed_data_uri,
+                'compressed_path': compressed_url, 
                 'compression_ratio': f"{compression_ratio:.2f}",
                 'psnr': f"{psnr:.2f}"
             }]
             
-            return render_template('compress.html', results=results, original_path=original_data_uri)
+            return render_template('compress.html', results=results, original_path=original_url) # Use the public URL
 
     return render_template('compress.html', results=None)
 
