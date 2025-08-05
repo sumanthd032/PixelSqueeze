@@ -1,74 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Compress images efficiently with PixelSqueeze using SVD technology.">
-    <title>PixelSqueeze - Home</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>PixelSqueeze - Smart Image Compression</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" type="image/svg+xml">
+    <!-- Google Fonts for a nicer typeface -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-link.active {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+    </style>
 </head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <h1 class="logo">PixelSqueeze</h1>
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li><a href="/" class="nav-link active">Home</a></li>
-                    <li><a href="/how-it-works" class="nav-link">How It Works?</a></li>
-                    <li><a href="/compress" class="nav-link">Get Started</a></li>
-                </ul>
-            </nav>
+<body class="h-full font-sans antialiased">
+
+<div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 shadow-sm z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="text-2xl font-bold text-gray-800">PixelSqueeze</a>
+                <nav class="flex space-x-2 items-center">
+                    <a href="/" class="nav-link text-gray-600 font-medium py-2 px-3 rounded-lg transition active">Home</a>
+                    <a href="/how-it-works" class="nav-link text-gray-600 hover:bg-gray-100 font-medium py-2 px-3 rounded-lg transition">How It Works</a>
+                    <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">Get Started</a>
+                </nav>
+            </div>
         </div>
     </header>
-    <main class="main">
-        <div class="container">
-            <section class="hero">
-                <h2 class="hero-title">Welcome to PixelSqueeze</h2>
-                <p class="hero-subtitle">Smart SVD-powered image compression.</p>
-                <a href="/compress" class="btn btn-primary">Get Started</a>
-            </section>
-            <section class="features">
-                <h2 class="features-title">Features</h2>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <span class="icon">🎨</span>
-                        <h3>Custom Quality</h3>
-                        <p>Tune compression with adjustable k values.</p>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="text-center py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">Smart Image Compression</h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">Leverage the power of Singular Value Decomposition to intelligently reduce image file sizes without sacrificing quality.</p>
+                <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition transform hover:scale-105 inline-block">Compress Your First Image</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">Why Choose PixelSqueeze?</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.096 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Custom Quality Control</h3>
+                        <p class="text-gray-600">Fine-tune the compression level with an intuitive slider to balance quality and file size perfectly.</p>
                     </div>
-                    <div class="feature-card">
-                        <span class="icon">⬇️</span>
-                        <h3>Instant Downloads</h3>
-                        <p>Quick access to compressed files.</p>
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6">
+                           <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Efficient SVD Power</h3>
+                        <p class="text-gray-600">Leverages Singular Value Decomposition for intelligent, high-quality image compression.</p>
                     </div>
-                    <div class="feature-card">
-                        <span class="icon">⚡</span>
-                        <h3>Efficient Compression</h3>
-                        <p>Optimize sizes with SVD technology.</p>
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-6">
+                            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Instant Downloads</h3>
+                        <p class="text-gray-600">Get your optimized images instantly with clear metrics on compression ratio and quality (PSNR).</p>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
-    <script>
-        document.querySelectorAll('.feature-card').forEach((card, index) => {
-            card.style.opacity = '0';
-            setTimeout(() => {
-                card.style.transition = 'opacity 0.4s ease-in-out';
-                card.style.opacity = '1';
-            }, index * 150);
-        });
 
-        const heroTitle = document.querySelector('.hero-title');
-        const heroSubtitle = document.querySelector('.hero-subtitle');
-        heroTitle.style.opacity = '0';
-        heroSubtitle.style.opacity = '0';
-        setTimeout(() => {
-            heroTitle.style.transition = 'opacity 0.8s ease-in';
-            heroSubtitle.style.transition = 'opacity 0.8s ease-in';
-            heroTitle.style.opacity = '1';
-            heroSubtitle.style.opacity = '1';
-        }, 200);
-    </script>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-600">
+            <p>&copy; 2025 PixelSqueeze. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
 </body>
 </html>

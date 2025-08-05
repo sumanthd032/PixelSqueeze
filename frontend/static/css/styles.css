@@ -157,14 +157,21 @@ body {
     display: inline-block;
     transition: all 0.3s ease;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 
 .btn-primary {
     background: linear-gradient(90deg, #1E3A8A, #2A5CBB);
     color: #FFF;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
     background: linear-gradient(90deg, #1A2F78, #214D9A);
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -184,12 +191,13 @@ body {
 .form-card {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
     padding: 20px;
     background-color: #FFF;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    align-items: center;
 }
 
 .form-group {
@@ -226,11 +234,52 @@ body {
     outline: none;
 }
 
+/* --- BETTERMENT: Styles for the new range slider --- */
+.input-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    margin: 0;
+}
+
+.input-range:hover {
+    opacity: 1;
+}
+
+.input-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #1E3A8A;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #FFF;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.input-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #1E3A8A;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #FFF;
+}
+
+
 .alert {
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
-    border-radius: 4px;
+    border-radius: 6px;
     text-align: center;
+    font-weight: 500;
 }
 
 .error {
@@ -252,8 +301,8 @@ body {
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .image-card {
@@ -261,12 +310,13 @@ body {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
 }
 
 .image-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .image {
@@ -274,6 +324,7 @@ body {
     height: auto;
     border-radius: 4px;
     margin-bottom: 10px;
+    border: 1px solid #E5E7EB;
 }
 
 .image-card h3 {
@@ -285,10 +336,11 @@ body {
 .image-card p {
     margin: 5px 0;
     color: #4A5568;
+    font-size: 0.95rem;
 }
 
 .metric {
-    font-weight: 500;
+    font-weight: 700;
     color: #F59E0B;
 }
 
@@ -311,6 +363,7 @@ body {
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.3s;
+    border-radius: 5px;
 }
 
 .collapsible:hover {
@@ -326,11 +379,42 @@ body {
     display: none;
     padding: 10px 15px;
     color: #4A5568;
+    border-top: 1px solid #E5E7EB;
 }
 
 .content p, .content ul, .content ol {
     margin: 10px 0;
 }
+
+/* --- BETTERMENT: Styles for the loading spinner --- */
+.loader-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #1E3A8A;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+@media (max-width: 768px) {
+    .form-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
 
 @media (max-width: 600px) {
     .header-content {
@@ -353,7 +437,6 @@ body {
         grid-template-columns: 1fr;
     }
     .form-card {
-        flex-direction: column;
         padding: 15px;
     }
     .form-group {
@@ -364,24 +447,5 @@ body {
     .btn {
         width: 100%;
         text-align: center;
-    }
-}
-
-@media (min-width: 601px) {
-    .main {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .container {
-        max-height: 100vh;
-        overflow-y: auto;
-    }
-    .hero, .features, .results {
-        margin: 10px 0;
-        padding: 15px;
-    }
-    .feature-grid {
-        margin: 10px 0;
     }
 }

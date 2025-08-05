@@ -1,84 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn how PixelSqueeze uses SVD for image compression.">
-    <title>How It Works? - PixelSqueeze</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="description" content="Learn how PixelSqueeze uses Singular Value Decomposition (SVD) for image compression.">
+    <title>How It Works - PixelSqueeze</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" type="image/svg+xml">
+    <!-- Google Fonts for a nicer typeface -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-sCutvgpjsCeNbPREaQ4b2KTPOwh9AU9htd_lYk53cc4Zf6hCE8KItpP5jPh2bAYz" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-hIoBPJpTad9VfA20M+6T52+lLkWU09yD3QLKCEsBvgeI4AC1pIqIEhG_oeo_X+7c" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" xintegrity="sha384-43gviWU0YVjaDtb/GpPCpUGTNYsEzRT5q7g7J9RLp5kSxNSt7Y+UeOHHtI2vL7eB" crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-link.active {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+        /* Custom styles for accordion content */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <h1 class="logo">PixelSqueeze</h1>
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li><a href="/" class="nav-link">Home</a></li>
-                    <li><a href="/how-it-works" class="nav-link active">How It Works?</a></li>
-                    <li><a href="/compress" class="nav-link">Get Started</a></li>
-                </ul>
-            </nav>
+<body class="h-full font-sans antialiased">
+
+<div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 shadow-sm z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="text-2xl font-bold text-gray-800">PixelSqueeze</a>
+                <nav class="flex space-x-2 items-center">
+                    <a href="/" class="nav-link text-gray-600 hover:bg-gray-100 font-medium py-2 px-3 rounded-lg transition">Home</a>
+                    <a href="/how-it-works" class="nav-link text-gray-600 font-medium py-2 px-3 rounded-lg transition active">How It Works</a>
+                    <a href="/compress" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition">Get Started</a>
+                </nav>
+            </div>
         </div>
     </header>
-    <main class="main">
-        <div class="container">
-            <h1>How PixelSqueeze Works</h1>
-            <section class="content-section">
-                <h2 class="collapsible">What is a Digital Image? <span class="toggle">+</span></h2>
-                <div class="content">
-                    <p>A digital image consists of a grid of pixels, each representing a tiny dot of color defined by RGB values ranging from 0 to 255 (red, green, blue). For example, a 1920x1080 resolution image contains over 2 million pixels, resulting in significant data storage requirements. These images are widely used in photography, web design, and digital media, necessitating efficient management techniques.</p>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-6 py-16">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">The Science Behind the Squeeze</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">From pixels to matrices, explore the linear algebra that powers smart image compression.</p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-4">
+            <!-- Accordion Item 1 -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-800 hover:bg-gray-50 focus:outline-none">
+                    <span>What is a Digital Image?</span>
+                    <svg class="w-6 h-6 transform transition-transform text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 pt-0 text-gray-600 leading-relaxed">
+                        <p>A digital image is fundamentally a grid of pixels. For a color image, this grid is actually three-dimensional. It can be represented as a large matrix where each entry corresponds to a pixel's color. This color is typically defined by three intensity values for Red, Green, and Blue (RGB), each ranging from 0 to 255. Therefore, a color image of size $H \times W$ (Height x Width) can be seen as three separate $H \times W$ matrices, one for each color channel.</p>
+                    </div>
                 </div>
-            </section>
-            <section class="content-section">
-                <h2 class="collapsible">Why Compress Images? <span class="toggle">+</span></h2>
-                <div class="content">
-                    <p>Image compression is essential to reduce file sizes by eliminating redundant or less critical data, making images easier to store, share, and load online. This is particularly important for websites to improve loading speeds, for mobile devices to save storage, and for archiving large datasets. Compression balances quality and size, ensuring usability without significant visual loss.</p>
-                    <p>Benefits include faster website performance, reduced bandwidth usage, and compatibility with various platforms, enhancing user experience across devices.</p>
+            </div>
+
+            <!-- Accordion Item 2 -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-800 hover:bg-gray-50 focus:outline-none">
+                    <span>How Does SVD Work for Compression?</span>
+                    <svg class="w-6 h-6 transform transition-transform text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 pt-0 text-gray-600 space-y-4 leading-relaxed">
+                        <p>Singular Value Decomposition (SVD) is a powerful matrix factorization technique from linear algebra. It states that any matrix $A$ can be broken down into three other matrices: $$ A = U \Sigma V^T $$</p>
+                        <ul class="list-disc list-inside space-y-2 pl-2">
+                            <li>$U$: An orthogonal matrix whose columns (left singular vectors) describe the spatial patterns in the image.</li>
+                            <li>$\Sigma$: A diagonal matrix containing the singular values. These values are positive, sorted in descending order, and represent the "importance" of the information in the corresponding vectors.</li>
+                            <li>$V^T$: The transpose of an orthogonal matrix whose rows (right singular vectors) describe feature patterns.</li>
+                        </ul>
+                        <p>The magic of SVD for compression lies in the $\Sigma$ matrix. The largest singular values correspond to the most significant parts of the image, while the smaller ones often represent noise or fine details. By keeping only the top $k$ singular values and their corresponding vectors, we can create a very good approximation of the original image: $$ A \approx U_k \Sigma_k V_k^T $$ This approximation requires storing far less data than the original matrix $A$, thus achieving compression.</p>
+                    </div>
                 </div>
-            </section>
-            <section class="content-section">
-                <h2 class="collapsible">How Does SVD Work? <span class="toggle">+</span></h2>
-                <div class="content">
-                    <p>Singular Value Decomposition (SVD) is a mathematical technique that decomposes a matrix into three components:</p>
-                    <ul>
-                        <li><strong>U</strong>: A matrix of left singular vectors representing spatial patterns.</li>
-                        <li><strong>S</strong>: A diagonal matrix of singular values indicating data importance, sorted in descending order.</li>
-                        <li><strong>V</strong>: A matrix of right singular vectors representing feature patterns.</li>
-                    </ul>
-                    <p>By retaining only the top <em>k</em> singular values and their corresponding vectors, SVD approximates the original matrix, reducing dimensionality. This process, expressed as <em>U[:, :k] @ diag(S[:k]) @ V[:k, :]</em>, allows for efficient data compression while preserving essential image details, adjustable based on the chosen <em>k</em> value.</p>
-                    <p>SVD is widely used in image processing, data analysis, and machine learning due to its ability to capture the most significant features with minimal loss.</p>
+            </div>
+
+            <!-- Accordion Item 3 -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-800 hover:bg-gray-50 focus:outline-none">
+                    <span>The PixelSqueeze Process</span>
+                    <svg class="w-6 h-6 transform transition-transform text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 pt-0 text-gray-600 leading-relaxed">
+                        <ol class="list-decimal list-inside space-y-3">
+                            <li><strong>Decomposition:</strong> The uploaded image is separated into its Red, Green, and Blue channel matrices. SVD is performed on each of these three matrices independently.</li>
+                            <li><strong>Reduction (Approximation):</strong> Based on your selected quality setting ($k$), we keep only the top $k$ singular values and vectors for each channel, discarding the rest. A lower $k$ means more compression but lower quality.</li>
+                            <li><strong>Reconstruction:</strong> The three new, smaller matrices for each channel ($U_k, \Sigma_k, V_k^T$) are multiplied together to reconstruct the compressed Red, Green, and Blue channels. These are then combined to form the final compressed image.</li>
+                            <li><strong>Evaluation:</strong> We calculate the Compression Ratio and the Peak Signal-to-Noise Ratio (PSNR) to show you how much smaller the file is and how well it retained its quality compared to the original.</li>
+                        </ol>
+                    </div>
                 </div>
-            </section>
-            <section class="content-section">
-                <h2 class="collapsible">PixelSqueeze Process <span class="toggle">+</span></h2>
-                <div class="content">
-                    <p>PixelSqueeze leverages SVD to compress images through the following steps:</p>
-                    <ol>
-                        <li><strong>Decomposition</strong>: Splits each RGB channel of the image into U, S, and V matrices.</li>
-                        <li><strong>Reduction</strong>: Selects the top <em>k</em> singular values to minimize data while retaining quality.</li>
-                        <li><strong>Reconstruction</strong>: Rebuilds the image using the reduced matrices, calculating compression ratio and PSNR (Peak Signal-to-Noise Ratio) to evaluate performance.</li>
-                        <li><strong>Output</strong>: Provides the compressed image with metrics for user review.</li>
-                    </ol>
-                    <p>This process ensures high efficiency and customizable quality, making PixelSqueeze ideal for professional and personal use.</p>
-                </div>
-            </section>
+            </div>
         </div>
     </main>
-    <script>
-        document.querySelectorAll('.collapsible').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const toggle = header.querySelector('.toggle');
-                if (content.style.display === 'block') {
-                    content.style.display = 'none';
-                    toggle.textContent = '+';
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-600">
+            <p>&copy; 2025 PixelSqueeze. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Render Math equations with KaTeX
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+
+        // Accordion functionality
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        accordionHeaders.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('svg');
+                const isExpanded = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+                // Close all other accordions
+                accordionHeaders.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('svg').style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // Toggle the clicked accordion
+                if (isExpanded) {
+                    content.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
                 } else {
-                    content.style.display = 'block';
-                    toggle.textContent = '-';
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
                 }
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>

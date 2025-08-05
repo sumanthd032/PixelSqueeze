@@ -3,25 +3,31 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import os
 
-def load_and_preprocess_image(image_path):
+def load_and_preprocess_image(image_source):
     """
-    Load an RGB image and convert it to NumPy arrays for each channel.
+    Load an RGB image from a path or file stream and convert it to NumPy arrays.
     
     Args:
-        image_path (str): Path to the input image.
+        image_source (str or file-like object): Path to the input image or a file stream.
     
     Returns:
         tuple: Original image array, R, G, B channel matrices (2D).
     """
-    img = Image.open(image_path).convert('RGB')
+    # Image.open can handle both file paths and in-memory streams directly.
+    img = Image.open(image_source).convert('RGB')
     img_array = np.array(img, dtype=np.float32)
     print(f"Image shape: {img_array.shape}")
+    
+    # Separate the channels
     r_channel = img_array[:, :, 0]
     g_channel = img_array[:, :, 1]
     b_channel = img_array[:, :, 2]
+    
+    # Clipping values to ensure they are within the 0-255 range
     r_channel = np.clip(r_channel, 0, 255)
     g_channel = np.clip(g_channel, 0, 255)
     b_channel = np.clip(b_channel, 0, 255)
+    
     return img_array, r_channel, g_channel, b_channel
 
 def compress_image_svd(r_channel, g_channel, b_channel, k):
@@ -35,10 +41,12 @@ def compress_image_svd(r_channel, g_channel, b_channel, k):
     Returns:
         tuple: Compressed image array, compressed R, G, B channels, SVD components.
     """
+    # Perform SVD on each channel
     U_r, S_r, Vt_r = np.linalg.svd(r_channel, full_matrices=False)
     U_g, S_g, Vt_g = np.linalg.svd(g_channel, full_matrices=False)
     U_b, S_b, Vt_b = np.linalg.svd(b_channel, full_matrices=False)
     
+    # Truncate the matrices to the given k value
     U_r_k = U_r[:, :k]
     S_r_k = np.diag(S_r[:k])
     Vt_r_k = Vt_r[:k, :]
@@ -51,14 +59,17 @@ def compress_image_svd(r_channel, g_channel, b_channel, k):
     S_b_k = np.diag(S_b[:k])
     Vt_b_k = Vt_b[:k, :]
     
+    # Reconstruct the image from the truncated matrices
     r_compressed = np.dot(U_r_k, np.dot(S_r_k, Vt_r_k))
     g_compressed = np.dot(U_g_k, np.dot(S_g_k, Vt_g_k))
     b_compressed = np.dot(U_b_k, np.dot(S_b_k, Vt_b_k))
     
+    # Clip and convert to uint8 for image display
     r_compressed = np.clip(r_compressed, 0, 255).astype(np.uint8)
     g_compressed = np.clip(g_compressed, 0, 255).astype(np.uint8)
     b_compressed = np.clip(b_compressed, 0, 255).astype(np.uint8)
     
+    # Stack the channels back into a single image array
     compressed_image = np.stack([r_compressed, g_compressed, b_compressed], axis=2)
     
     return compressed_image, r_compressed, g_compressed, b_compressed, (U_r_k, S_r_k, Vt_r_k), (U_g_k, S_g_k, Vt_g_k), (U_b_k, S_b_k, Vt_b_k)
@@ -78,6 +89,7 @@ def calculate_compression_ratio(original_shape, k, U_r_k, S_r_k, Vt_r_k, U_g_k, 
     height, width, channels = original_shape
     original_size = height * width * channels
     
+    # Compressed size is the sum of the elements in the U, S, and V matrices for each channel
     compressed_size = 0
     for U_k, S_k, Vt_k in [(U_r_k, S_r_k, Vt_r_k), (U_g_k, S_g_k, Vt_g_k), (U_b_k, S_b_k, Vt_b_k)]:
         compressed_size += U_k.size + S_k.diagonal().size + Vt_k.size
@@ -95,9 +107,9 @@ def calculate_psnr(original_image, compressed_image):
     Returns:
         float: PSNR value in decibels (dB).
     """
-    mse = np.mean((original_image - compressed_image) ** 2)
+    mse = np.mean((original_image.astype(np.float32) - compressed_image.astype(np.float32)) ** 2)
     if mse == 0:
-        return float('inf')
+        return float('inf')  # PSNR is infinite if images are identical
     max_pixel = 255.0
     psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
     return psnr
@@ -113,7 +125,7 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     Returns:
         list: List of dictionaries with k, compressed_path, compression_ratio, psnr.
     """
-    os.makedirs("/uploads", exist_ok=True)
+    os.makedirs("uploads", exist_ok=True)
     img_array, r_channel, g_channel, b_channel = load_and_preprocess_image(image_path)
     
     results = []
@@ -127,7 +139,7 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     for i, k in enumerate(k_values, 1):
         compressed_image, _, _, _, r_svd, g_svd, b_svd = compress_image_svd(r_channel, g_channel, b_channel, k)
         
-        compressed_path = f"/uploads/compressed_k{k}.jpg"
+        compressed_path = f"uploads/compressed_k{k}.jpg"
         Image.fromarray(compressed_image).save(compressed_path)
         
         compression_ratio = calculate_compression_ratio(img_array.shape, k, *r_svd, *g_svd, *b_svd)
@@ -151,7 +163,12 @@ def test_compression(image_path, k_values=[10, 50, 100]):
     return results
 
 if __name__ == "__main__":
-    sample_image_path = "image-compressor/sample_image.jpg"
-    results = test_compression(sample_image_path, k_values=[10, 50, 100])
-    for result in results:
-        print(f"k={result['k']}: Compression Ratio={result['compression_ratio']:.2f}, PSNR={result['psnr']:.2f} dB")
+    # Ensure you have a sample image at this path or change it
+    sample_image_path = "sample_image.jpg"
+    if os.path.exists(sample_image_path):
+        results = test_compression(sample_image_path, k_values=[10, 50, 100])
+        for result in results:
+            print(f"k={result['k']}: Compression Ratio={result['compression_ratio']:.2f}, PSNR={result['psnr']:.2f} dB")
+    else:
+        print(f"Sample image not found at '{sample_image_path}'. Please provide a valid image path.")
+
