@@ -2,3 +2,4 @@
 /venv
 /uploads
 /image-compressor
+.env
