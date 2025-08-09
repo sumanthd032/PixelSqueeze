@@ -5,7 +5,7 @@
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://pixel-squeeze-nv2jhfwjt-sumanths-projects-8811893f.vercel.app)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://pixelsqueeze-live.vercel.app)
 
 PixelSqueeze is an innovative web application that leverages **Singular Value Decomposition (SVD)** to efficiently compress digital images while preserving quality. Built with **Flask and Python**, it allows users to upload images, adjust compression levels using a customizable `k` value, and download the compressed results with metrics like **compression ratio** and **Peak Signal-to-Noise Ratio (PSNR)**.
 
